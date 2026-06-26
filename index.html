@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Para ti 💌</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Courier New', monospace;
+    background: linear-gradient(135deg, #0b0b1a 0%, #1a1a3a 50%, #2b1b4d 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .stars-layer {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle linear infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.4); }
+  }
+
+  .glow-orb {
+    position: fixed;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, #ff6fd8 0%, transparent 70%);
+    opacity: 0.18;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: floatGlow 7s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .glow-orb2 {
+    position: fixed;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, #9b5de5 0%, transparent 70%);
+    opacity: 0.15;
+    bottom: 20%;
+    right: 10%;
+    animation: floatGlow 9s ease-in-out infinite reverse;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  @keyframes floatGlow {
+    0%, 100% { transform: translateX(-50%) translateY(0px); }
+    50% { transform: translateX(-50%) translateY(30px); }
+  }
+
+  .sailor-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 130px;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .sailor {
+    position: absolute;
+    bottom: 0;
+    width: 100px;
+    filter: drop-shadow(0 0 12px #ff6fd8) drop-shadow(0 0 25px #9b5de5);
+    animation: walkAcross 8s linear infinite;
+    image-rendering: pixelated;
+  }
+
+  @keyframes walkAcross {
+    0%   { left: -120px; }
+    100% { left: calc(100% + 120px); }
+  }
+
+  .main {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    padding: 20px;
+  }
+
+  /* ---- SCREEN 1: Inicio ---- */
+  #screen-inicio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .moon-emoji {
+    font-size: 60px;
+    animation: spin 8s linear infinite;
+    filter: drop-shadow(0 0 20px #ffe066);
+  }
+
+  @keyframes spin {
+    0%, 40%, 60%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(15deg) scale(1.1); }
+  }
+
+  #screen-inicio h1 {
+    font-size: 1.9rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #ff6fd8, #c77dff, #ff6fd8);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 0%; }
+    100% { background-position: 200%; }
+  }
+
+  #screen-inicio p {
+    font-size: 0.95rem;
+    color: #d8b4fe;
+    letter-spacing: 1px;
+  }
+
+  .sparkles {
+    font-size: 0.85rem;
+    color: #fbbf24;
+    letter-spacing: 4px;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .btn-abrir {
+    margin-top: 8px;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #ff6fd8, #9b5de5);
+    border: none;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 0 20px #ff6fd866, 0 0 40px #9b5de522;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .btn-abrir:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 30px #ff6fd8aa, 0 0 60px #9b5de555;
+  }
+
+  /* ---- SCREEN 2: Password ---- */
+  #screen-pass {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .pass-box {
+    background: rgba(27, 10, 50, 0.85);
+    border: 1px solid #9b5de5;
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 0 30px #ff6fd844, inset 0 0 20px #9b5de511;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    max-width: 340px;
+    width: 100%;
+  }
+
+  .pass-box h2 {
+    font-size: 1.2rem;
+    background: linear-gradient(90deg, #ff6fd8, #c77dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .pass-box p {
+    color: #c4b5fd;
+    font-size: 0.85rem;
+  }
+
+  .pass-input {
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid #9b5de5;
+    background: rgba(255,255,255,0.05);
+    color: white;
+    font-size: 1.1rem;
+    font-family: monospace;
+    letter-spacing: 4px;
+    text-align: center;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .pass-input:focus {
+    border-color: #ff6fd8;
+    box-shadow: 0 0 15px #ff6fd844;
+  }
+
+  .pass-input.error {
+    border-color: #f87171;
+    animation: shake 0.4s ease;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  .error-msg {
+    color: #f87171;
+    font-size: 0.8rem;
+    display: none;
+  }
+
+  .btn-back {
+    background: none;
+    border: 1px solid #9b5de566;
+    border-radius: 50px;
+    color: #c4b5fd;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    transition: border-color 0.2s;
+  }
+
+  .btn-back:hover { border-color: #ff6fd8; color: #ff6fd8; }
+
+  /* ---- SCREEN 3: Carta ---- */
+  #screen-carta {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .envelope-wrapper {
+    animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0) rotate(-10deg); opacity: 0; }
+    to { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  .envelope {
+    width: 340px;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px #f9a8d4,
+      0 0 30px #ff6fd866,
+      0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .envelope-top {
+    background: linear-gradient(135deg, #fce7f3, #f3e8ff);
+    padding: 24px 28px 20px;
+    text-align: center;
+    border-bottom: 1px solid #f9a8d4;
+  }
+
+  .envelope-top h2 {
+    font-size: 1.4rem;
+    color: #be185d;
+    margin-bottom: 4px;
+  }
+
+  .hearts-row {
+    color: #f9a8d4;
+    font-size: 1.2rem;
+    letter-spacing: 6px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+
+  .envelope-body {
+    padding: 24px 28px 28px;
+    background: white;
+  }
+
+  .envelope-body p {
+    color: #374151;
+    font-family: 'Georgia', serif;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    text-align: center;
+  }
+
+  .envelope-body .firma {
+    margin-top: 20px;
+    color: #be185d;
+    font-size: 0.85rem;
+    font-family: 'Courier New', monospace;
+    opacity: 0.7;
+  }
+
+  .floating-hearts {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .fheart {
+    position: absolute;
+    font-size: 1.2rem;
+    animation: floatUp linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes floatUp {
+    0%   { transform: translateY(100vh) scale(0.5); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars-layer" id="starsLayer"></div>
+<div class="glow-orb"></div>
+<div class="glow-orb2"></div>
+
+<!-- Sailor Moon caminando -->
+<!-- Puedes reemplazar el src por cualquier GIF de Sailor Moon que tengas descargado -->
+<!-- Ejemplo local: src="sailormoon.gif" -->
+<div class="sailor-container">
+  <img class="sailor" id="sailorGif"
+    src="sm.gif"
+    alt="Sailor Moon caminando">
+</div>
+
+<div class="floating-hearts" id="floatingHearts" style="display:none;"></div>
+
+<div class="main">
+
+  <!-- Pantalla 1: Inicio -->
+  <div id="screen-inicio">
+    <div class="moon-emoji">🌙</div>
+    <h1>Una prueba de mi amor</h1>
+    <p>Solo mi princesa puede ver este mensaje</p>
+    <div class="sparkles">✦ ✦ ✦ ✦ ✦</div>
+    <button class="btn-abrir" onclick="irAContrasena()">💌 Abrir carta</button>
+  </div>
+
+  <!-- Pantalla 2: Contraseña -->
+  <div id="screen-pass">
+    <div class="pass-box">
+      <div style="font-size:2rem;">🔐</div>
+      <h2>Contraseña mágica</h2>
+      <p>Solo mi princesa sabe el secreto ✨<br><span style="font-size:0.75rem;opacity:0.6;">(formato ddmmaa)</span></p>
+      <input type="password" class="pass-input" id="passInput"
+        maxlength="6" placeholder="••••••"
+        oninput="limpiarError()"
+        onkeydown="if(event.key==='Enter') verificar()">
+      <p class="error-msg" id="errorMsg">💔 Esa no es la contraseña, mi amor</p>
+      <button class="btn-abrir" onclick="verificar()">✨ Entrar</button>
+      <button class="btn-back" onclick="volver()">← Volver</button>
+    </div>
+  </div>
+
+  <!-- Pantalla 3: Carta -->
+  <div id="screen-carta">
+    <div class="envelope-wrapper">
+      <div class="envelope">
+        <div class="envelope-top">
+          <h2>💌 Para ti, mi amor</h2>
+          <div class="hearts-row">♥ ♥ ♥ ♥ ♥</div>
+        </div>
+        <div class="envelope-body">
+          <p>
+            Eres la mujer más maravillosa<br>
+            que ha existido en mi vida.<br><br>
+            Cada día a tu lado es un regalo<br>
+            que no merezco pero agradezco<br>
+            con todo mi corazón.<br><br>
+            Quiero que nuestro futuro sea<br>
+            tan brillante y hermoso como tú. 💖
+          </p>
+          <p class="firma">— tuyo, siempre 🌙</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const PASSWORD = "260126";
+
+  // Generar estrellas aleatorias
+  const starsLayer = document.getElementById('starsLayer');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.classList.add('star');
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      top: ${Math.random() * 100}%;
+      left: ${Math.random() * 100}%;
+      animation-duration: ${Math.random() * 4 + 2}s;
+      animation-delay: ${Math.random() * 5}s;
+    `;
+    starsLayer.appendChild(s);
+  }
+
+  function irAContrasena() {
+    document.getElementById('screen-inicio').style.display = 'none';
+    const sp = document.getElementById('screen-pass');
+    sp.style.display = 'flex';
+    setTimeout(() => document.getElementById('passInput').focus(), 100);
+  }
+
+  function volver() {
+    document.getElementById('screen-pass').style.display = 'none';
+    document.getElementById('screen-inicio').style.display = 'flex';
+    document.getElementById('passInput').value = '';
+    limpiarError();
+  }
+
+  function limpiarError() {
+    document.getElementById('passInput').classList.remove('error');
+    document.getElementById('errorMsg').style.display = 'none';
+  }
+
+  function verificar() {
+    const val = document.getElementById('passInput').value;
+    if (val === PASSWORD) {
+      document.getElementById('screen-pass').style.display = 'none';
+      document.getElementById('screen-carta').style.display = 'flex';
+      lanzarCorazones();
+    } else {
+      const inp = document.getElementById('passInput');
+      inp.classList.add('error');
+      document.getElementById('errorMsg').style.display = 'block';
+      inp.value = '';
+      setTimeout(() => inp.classList.remove('error'), 500);
+    }
+  }
+
+  function lanzarCorazones() {
+    const container = document.getElementById('floatingHearts');
+    container.style.display = 'block';
+    const emojis = ['💖','💗','💝','✨','💫','🌸','⭐'];
+    let count = 0;
+    const interval = setInterval(() => {
+      if (count > 40) { clearInterval(interval); return; }
+      const h = document.createElement('div');
+      h.classList.add('fheart');
+      h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.animationDuration = (Math.random() * 4 + 4) + 's';
+      h.style.animationDelay = (Math.random() * 2) + 's';
+      h.style.fontSize = (Math.random() * 1.2 + 0.8) + 'rem';
+      container.appendChild(h);
+      count++;
+      setTimeout(() => h.remove(), 8000);
+    }, 150);
+  }
+</script>
+</body>
+</html>

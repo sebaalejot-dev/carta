@@ -60,7 +60,7 @@
     opacity: 0.15;
     bottom: 20%;
     right: 10%;
-    animation: floatGlow 9s ease-in-out infinite reverse;
+    animation: floatGlow2 9s ease-in-out infinite reverse;
     z-index: 0;
     pointer-events: none;
   }
@@ -68,6 +68,11 @@
   @keyframes floatGlow {
     0%, 100% { transform: translateX(-50%) translateY(0px); }
     50% { transform: translateX(-50%) translateY(30px); }
+  }
+
+  @keyframes floatGlow2 {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(30px); }
   }
 
   .sailor-container {
@@ -101,6 +106,9 @@
     text-align: center;
     color: white;
     padding: 20px;
+    width: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
   }
 
   /* ---- SCREEN 1: Inicio ---- */
@@ -268,7 +276,8 @@
     display: none;
     flex-direction: column;
     align-items: center;
-    gap: 0;
+    gap: 28px;
+    padding-bottom: 100px;
   }
 
   .envelope-wrapper {
@@ -337,6 +346,102 @@
     opacity: 0.7;
   }
 
+  /* ---- POLAROIDS ---- */
+  .polaroids-titulo {
+    color: #f9a8d4;
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    opacity: 0.8;
+  }
+
+  .polaroids-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 720px;
+    padding: 0 16px;
+  }
+
+  .polaroid {
+    background: #fffef5;
+    padding: 10px 10px 32px 10px;
+    box-shadow:
+      0 4px 15px rgba(0,0,0,0.4),
+      0 0 0 1px rgba(255,111,216,0.2);
+    border-radius: 2px;
+    width: 160px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeSlideUp 0.6s ease both;
+    cursor: default;
+  }
+
+  /* rotaciones alternadas para efecto natural */
+  .polaroid:nth-child(1) { transform: rotate(-3deg); }
+  .polaroid:nth-child(2) { transform: rotate(2deg); }
+  .polaroid:nth-child(3) { transform: rotate(-1.5deg); }
+  .polaroid:nth-child(4) { transform: rotate(3deg); }
+  .polaroid:nth-child(5) { transform: rotate(-2deg); }
+  .polaroid:nth-child(6) { transform: rotate(1.5deg); }
+
+  .polaroid:nth-child(1) { animation-delay: 0.1s; }
+  .polaroid:nth-child(2) { animation-delay: 0.2s; }
+  .polaroid:nth-child(3) { animation-delay: 0.3s; }
+  .polaroid:nth-child(4) { animation-delay: 0.4s; }
+  .polaroid:nth-child(5) { animation-delay: 0.5s; }
+  .polaroid:nth-child(6) { animation-delay: 0.6s; }
+
+  .polaroid:hover {
+    transform: rotate(0deg) scale(1.08) !important;
+    box-shadow:
+      0 12px 35px rgba(0,0,0,0.5),
+      0 0 20px #ff6fd855;
+    z-index: 10;
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px) rotate(var(--rot, 0deg)); }
+    to   { opacity: 1; }
+  }
+
+  .polaroid img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+    border-radius: 1px;
+    filter: brightness(0.97) saturate(1.1);
+  }
+
+  .polaroid-caption {
+    margin-top: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    color: #be185d;
+    text-align: center;
+    min-height: 16px;
+    letter-spacing: 0.5px;
+  }
+
+  /* cinta scotch decorativa en cada polaroid */
+  .polaroid::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 18px;
+    background: rgba(255, 220, 240, 0.55);
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+
+  .polaroid {
+    position: relative;
+  }
+
+  /* ---- FLOATING HEARTS ---- */
   .floating-hearts {
     position: fixed;
     top: 0; left: 0;
@@ -347,7 +452,6 @@
 
   .fheart {
     position: absolute;
-    font-size: 1.2rem;
     animation: floatUp linear infinite;
     opacity: 0;
   }
@@ -366,13 +470,10 @@
 <div class="glow-orb"></div>
 <div class="glow-orb2"></div>
 
-<!-- Sailor Moon caminando -->
-<!-- Puedes reemplazar el src por cualquier GIF de Sailor Moon que tengas descargado -->
-<!-- Ejemplo local: src="sailormoon.gif" -->
 <div class="sailor-container">
-  <img class="sailor" id="sailorGif"
+  <img class="sailor"
     src="sm.gif"
-    alt="Sailor Moon caminando">
+    alt="Sailor Moon">
 </div>
 
 <div class="floating-hearts" id="floatingHearts" style="display:none;"></div>
@@ -404,8 +505,9 @@
     </div>
   </div>
 
-  <!-- Pantalla 3: Carta -->
+  <!-- Pantalla 3: Carta + Polaroids -->
   <div id="screen-carta">
+
     <div class="envelope-wrapper">
       <div class="envelope">
         <div class="envelope-top">
@@ -426,6 +528,34 @@
         </div>
       </div>
     </div>
+
+    <!-- Polaroids -->
+    <p class="polaroids-titulo">✦ nuestros momentos ✦</p>
+
+    <div class="polaroids-grid">
+
+      <!-- 
+        REEMPLAZA cada src="fotos/foto1.jpg" con la ruta de tus fotos.
+        Si las tienes en una carpeta "fotos/" pon: src="fotos/foto1.jpg"
+        También puedes cambiar el texto del caption debajo de cada foto.
+      -->
+
+      <div class="polaroid">
+        <img src="fotos/foto2.jpg" alt="foto 2">
+        <div class="polaroid-caption">te amo tanto 💕</div>
+      </div>
+
+      <div class="polaroid">
+        <img src="fotos/foto3.jpg" alt="foto 3">
+        <div class="polaroid-caption">siempre juntos ✨</div>
+      </div>
+
+      <div class="polaroid">
+        <img src="fotos/foto6.jpg" alt="foto 6">
+        <div class="polaroid-caption">mi princesa 👑</div>
+      </div>
+
+    </div>
   </div>
 
 </div>
@@ -433,7 +563,7 @@
 <script>
   const PASSWORD = "260126";
 
-  // Generar estrellas aleatorias
+  // Estrellas
   const starsLayer = document.getElementById('starsLayer');
   for (let i = 0; i < 120; i++) {
     const s = document.createElement('div');
